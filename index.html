@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Arus Bolak-Balik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cover {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .cover h1 {
+            font-size: 3.5em;
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cover h2 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .cover p {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .calculator-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .menu-item h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .menu-item p {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .calculator-form {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            border-radius: 15px;
+            border-left: 5px solid #28a745;
+            display: none;
+        }
+
+        .result h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .result p {
+            color: #155724;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .explanation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .explanation h3 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .explanation p {
+            color: #6c757d;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .cover h1 {
+                font-size: 2.5em;
+            }
+
+            .cover h2 {
+                font-size: 1.5em;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .calculator-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cover Section -->
+        <div class="cover" id="cover">
+            <h1>⚡ ARUS BOLAK-BALIK ⚡</h1>
+            <h2>Kalkulator Rangkaian AC</h2>
+            <p>Selamat datang di kalkulator arus bolak-balik yang dirancang khusus untuk membantu Anda menyelesaikan perhitungan rangkaian AC dengan mudah dan akurat. Tool ini mendukung berbagai jenis perhitungan mulai dari komponen dasar hingga rangkaian kompleks.</p>
+            <button class="start-btn" onclick="showMainContent()">Mulai Perhitungan</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <div class="calculator-section">
+                <h2 class="section-title">🔧 Pilih Jenis Perhitungan</h2>
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showCalculator(1)">
+                        <h3>📊 Tegangan Melalui Resistor</h3>
+                        <p>Hitung tegangan pada resistor menggunakan hukum Ohm</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(2)">
+                        <h3>🔌 Arus Melalui Resistor</h3>
+                        <p>Hitung arus yang mengalir melalui resistor</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(3)">
+                        <h3>🌊 Tegangan Melalui Induktor</h3>
+                        <p>Hitung tegangan pada induktor dengan reaktansi induktif</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(4)">
+                        <h3>🔄 Arus Melalui Induktor</h3>
+                        <p>Hitung arus yang mengalir melalui induktor</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(5)">
+                        <h3>⚡ Tegangan Melalui Kapasitor</h3>
+                        <p>Hitung tegangan pada kapasitor dengan reaktansi kapasitif</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(6)">
+                        <h3>🔋 Arus Melalui Kapasitor</h3>
+                        <p>Hitung arus yang mengalir melalui kapasitor</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(7)">
+                        <h3>🔗 Impedansi Rangkaian R-L</h3>
+                        <p>Hitung impedansi rangkaian resistor-induktor</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(8)">
+                        <h3>⚙️ Impedansi Rangkaian R-C</h3>
+                        <p>Hitung impedansi rangkaian resistor-kapasitor</p>
+                    </div>
+                    <div class="menu-item" onclick="showCalculator(9)">
+                        <h3>🎛️ Impedansi Rangkaian R-L-C</h3>
+                        <p>Hitung impedansi rangkaian resistor-induktor-kapasitor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Forms -->
+        <div class="calculator-form" id="calc1">
+            <h2>📊 Tegangan Melalui Resistor</h2>
+            <div class="form-group">
+                <label for="i1">Arus (I) dalam Ampere:</label>
+                <input type="number" id="i1" step="any" placeholder="Masukkan nilai arus">
+            </div>
+            <div class="form-group">
+                <label for="r1">Hambatan (R) dalam Ohm:</label>
+                <input type="number" id="r1" step="any" placeholder="Masukkan nilai hambatan">
+            </div>
+            <button class="calculate-btn" onclick="calculate(1)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result1"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung tegangan pada resistor, kita menggunakan <strong>Hukum Ohm</strong> yang menyatakan bahwa tegangan berbanding lurus dengan arus dan hambatan.</p>
+                <div class="formula">V = I × R</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• R = Hambatan (Ohm)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi kapasitif: X_C = 1/(2πfC)</p>
+                <p>2. Kuadratkan nilai R dan X_C</p>
+                <p>3. Jumlahkan hasil kuadrat tersebut</p>
+                <p>4. Ambil akar kuadrat dari hasil penjumlahan</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc9">
+            <h2>🎛️ Impedansi Rangkaian R-L-C</h2>
+            <div class="form-group">
+                <label for="r9">Hambatan (R) dalam Ohm:</label>
+                <input type="number" id="r9" step="any" placeholder="Masukkan nilai hambatan">
+            </div>
+            <div class="form-group">
+                <label for="l9">Induktansi (L) dalam Henry:</label>
+                <input type="number" id="l9" step="any" placeholder="Masukkan nilai induktansi">
+            </div>
+            <div class="form-group">
+                <label for="c9">Kapasitansi (C) dalam Farad:</label>
+                <input type="number" id="c9" step="any" placeholder="Masukkan nilai kapasitansi">
+            </div>
+            <div class="form-group">
+                <label for="f9">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f9" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(9)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result9"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Impedansi rangkaian R-L-C adalah gabungan hambatan resistif, reaktansi induktif, dan reaktansi kapasitif. Reaktansi induktif dan kapasitif saling berlawanan.</p>
+                <div class="formula">Z = √(R² + (X_L - X_C)²) = √(R² + (2πfL - 1/(2πfC))²)</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• Z = Impedansi (Ohm)</p>
+                <p>• R = Hambatan (Ohm)</p>
+                <p>• X_L = Reaktansi induktif (Ohm)</p>
+                <p>• X_C = Reaktansi kapasitif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• L = Induktansi (Henry)</p>
+                <p>• C = Kapasitansi (Farad)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi induktif: X_L = 2πfL</p>
+                <p>2. Hitung reaktansi kapasitif: X_C = 1/(2πfC)</p>
+                <p>3. Hitung selisih: X_L - X_C</p>
+                <p>4. Kuadratkan R dan selisih reaktansi</p>
+                <p>5. Jumlahkan dan ambil akar kuadrat</p>
+                <p><strong>Catatan:</strong> Pada frekuensi resonansi, X_L = X_C, sehingga Z = R (minimum)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showMainContent() {
+            document.getElementById('cover').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            // Hide all calculator forms
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById('calc' + i).style.display = 'none';
+            }
+        }
+
+        function showCalculator(type) {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('calc' + type).style.display = 'block';
+            // Hide result when switching calculators
+            document.getElementById('result' + type).style.display = 'none';
+        }
+
+        function calculate(type) {
+            let result = '';
+            let resultDiv = document.getElementById('result' + type);
+            
+            try {
+                switch(type) {
+                    case 1: // Tegangan melalui resistor
+                        let i1 = parseFloat(document.getElementById('i1').value);
+                        let r1 = parseFloat(document.getElementById('r1').value);
+                        if (isNaN(i1) || isNaN(r1)) throw new Error('Masukkan nilai yang valid');
+                        let v1 = i1 * r1;
+                        result = `
+                            <h3>📊 Hasil Perhitungan</h3>
+                            <p><strong>Tegangan pada resistor:</strong></p>
+                            <p>V = I × R = ${i1} × ${r1} = <strong>${v1.toFixed(2)} V</strong></p>
+                            <p>Dengan arus ${i1} A melalui resistor ${r1} Ω, tegangan yang dihasilkan adalah ${v1.toFixed(2)} V.</p>
+                        `;
+                        break;
+                        
+                    case 2: // Arus melalui resistor
+                        let v2 = parseFloat(document.getElementById('v2').value);
+                        let r2 = parseFloat(document.getElementById('r2').value);
+                        if (isNaN(v2) || isNaN(r2) || r2 === 0) throw new Error('Masukkan nilai yang valid (R tidak boleh 0)');
+                        let i2 = v2 / r2;
+                        result = `
+                            <h3>🔌 Hasil Perhitungan</h3>
+                            <p><strong>Arus melalui resistor:</strong></p>
+                            <p>I = V / R = ${v2} / ${r2} = <strong>${i2.toFixed(2)} A</strong></p>
+                            <p>Dengan tegangan ${v2} V pada resistor ${r2} Ω, arus yang mengalir adalah ${i2.toFixed(2)} A.</p>
+                        `;
+                        break;
+                        
+                    case 3: // Tegangan melalui induktor
+                        let i3 = parseFloat(document.getElementById('i3').value);
+                        let l3 = parseFloat(document.getElementById('l3').value);
+                        let f3 = parseFloat(document.getElementById('f3').value);
+                        if (isNaN(i3) || isNaN(l3) || isNaN(f3)) throw new Error('Masukkan nilai yang valid');
+                        let xl3 = 2 * Math.PI * f3 * l3;
+                        let v3 = i3 * xl3;
+                        result = `
+                            <h3>🌊 Hasil Perhitungan</h3>
+                            <p><strong>Tegangan pada induktor:</strong></p>
+                            <p>X_L = 2πfL = 2π × ${f3} × ${l3} = <strong>${xl3.toFixed(2)} Ω</strong></p>
+                            <p>V = I × X_L = ${i3} × ${xl3.toFixed(2)} = <strong>${v3.toFixed(2)} V</strong></p>
+                            <p>Reaktansi induktif sebesar ${xl3.toFixed(2)} Ω menghasilkan tegangan ${v3.toFixed(2)} V.</p>
+                        `;
+                        break;
+                        
+                    case 4: // Arus melalui induktor
+                        let v4 = parseFloat(document.getElementById('v4').value);
+                        let l4 = parseFloat(document.getElementById('l4').value);
+                        let f4 = parseFloat(document.getElementById('f4').value);
+                        if (isNaN(v4) || isNaN(l4) || isNaN(f4) || l4 === 0 || f4 === 0) throw new Error('Masukkan nilai yang valid (L dan f tidak boleh 0)');
+                        let xl4 = 2 * Math.PI * f4 * l4;
+                        let i4 = v4 / xl4;
+                        result = `
+                            <h3>🔄 Hasil Perhitungan</h3>
+                            <p><strong>Arus melalui induktor:</strong></p>
+                            <p>X_L = 2πfL = 2π × ${f4} × ${l4} = <strong>${xl4.toFixed(2)} Ω</strong></p>
+                            <p>I = V / X_L = ${v4} / ${xl4.toFixed(2)} = <strong>${i4.toFixed(2)} A</strong></p>
+                            <p>Dengan reaktansi induktif ${xl4.toFixed(2)} Ω, arus yang mengalir adalah ${i4.toFixed(2)} A.</p>
+                        `;
+                        break;
+                        
+                    case 5: // Tegangan melalui kapasitor
+                        let i5 = parseFloat(document.getElementById('i5').value);
+                        let c5 = parseFloat(document.getElementById('c5').value);
+                        let f5 = parseFloat(document.getElementById('f5').value);
+                        if (isNaN(i5) || isNaN(c5) || isNaN(f5) || c5 === 0 || f5 === 0) throw new Error('Masukkan nilai yang valid (C dan f tidak boleh 0)');
+                        let xc5 = 1 / (2 * Math.PI * f5 * c5);
+                        let v5 = i5 * xc5;
+                        result = `
+                            <h3>⚡ Hasil Perhitungan</h3>
+                            <p><strong>Tegangan pada kapasitor:</strong></p>
+                            <p>X_C = 1/(2πfC) = 1/(2π × ${f5} × ${c5}) = <strong>${xc5.toFixed(2)} Ω</strong></p>
+                            <p>V = I × X_C = ${i5} × ${xc5.toFixed(2)} = <strong>${v5.toFixed(2)} V</strong></p>
+                            <p>Reaktansi kapasitif sebesar ${xc5.toFixed(2)} Ω menghasilkan tegangan ${v5.toFixed(2)} V.</p>
+                        `;
+                        break;
+                        
+                    case 6: // Arus melalui kapasitor
+                        let v6 = parseFloat(document.getElementById('v6').value);
+                        let c6 = parseFloat(document.getElementById('c6').value);
+                        let f6 = parseFloat(document.getElementById('f6').value);
+                        if (isNaN(v6) || isNaN(c6) || isNaN(f6) || c6 === 0 || f6 === 0) throw new Error('Masukkan nilai yang valid (C dan f tidak boleh 0)');
+                        let i6 = v6 * 2 * Math.PI * f6 * c6;
+                        let xc6 = 1 / (2 * Math.PI * f6 * c6);
+                        result = `
+                            <h3>🔋 Hasil Perhitungan</h3>
+                            <p><strong>Arus melalui kapasitor:</strong></p>
+                            <p>X_C = 1/(2πfC) = 1/(2π × ${f6} × ${c6}) = <strong>${xc6.toFixed(2)} Ω</strong></p>
+                            <p>I = V / X_C = V × 2πfC = ${v6} × 2π × ${f6} × ${c6} = <strong>${i6.toFixed(2)} A</strong></p>
+                            <p>Dengan reaktansi kapasitif ${xc6.toFixed(2)} Ω, arus yang mengalir adalah ${i6.toFixed(2)} A.</p>
+                        `;
+                        break;
+                        
+                    case 7: // Impedansi R-L
+                        let r7 = parseFloat(document.getElementById('r7').value);
+                        let l7 = parseFloat(document.getElementById('l7').value);
+                        let f7 = parseFloat(document.getElementById('f7').value);
+                        if (isNaN(r7) || isNaN(l7) || isNaN(f7)) throw new Error('Masukkan nilai yang valid');
+                        let xl7 = 2 * Math.PI * f7 * l7;
+                        let z7 = Math.sqrt(r7 * r7 + xl7 * xl7);
+                        result = `
+                            <h3>🔗 Hasil Perhitungan</h3>
+                            <p><strong>Impedansi rangkaian R-L:</strong></p>
+                            <p>X_L = 2πfL = 2π × ${f7} × ${l7} = <strong>${xl7.toFixed(2)} Ω</strong></p>
+                            <p>Z = √(R² + X_L²) = √(${r7}² + ${xl7.toFixed(2)}²) = <strong>${z7.toFixed(2)} Ω</strong></p>
+                            <p>Impedansi total rangkaian R-L adalah ${z7.toFixed(2)} Ω.</p>
+                        `;
+                        break;
+                        
+                    case 8: // Impedansi R-C
+                        let r8 = parseFloat(document.getElementById('r8').value);
+                        let c8 = parseFloat(document.getElementById('c8').value);
+                        let f8 = parseFloat(document.getElementById('f8').value);
+                        if (isNaN(r8) || isNaN(c8) || isNaN(f8) || c8 === 0 || f8 === 0) throw new Error('Masukkan nilai yang valid (C dan f tidak boleh 0)');
+                        let xc8 = 1 / (2 * Math.PI * f8 * c8);
+                        let z8 = Math.sqrt(r8 * r8 + xc8 * xc8);
+                        result = `
+                            <h3>⚙️ Hasil Perhitungan</h3>
+                            <p><strong>Impedansi rangkaian R-C:</strong></p>
+                            <p>X_C = 1/(2πfC) = 1/(2π × ${f8} × ${c8}) = <strong>${xc8.toFixed(2)} Ω</strong></p>
+                            <p>Z = √(R² + X_C²) = √(${r8}² + ${xc8.toFixed(2)}²) = <strong>${z8.toFixed(2)} Ω</strong></p>
+                            <p>Impedansi total rangkaian R-C adalah ${z8.toFixed(2)} Ω.</p>
+                        `;
+                        break;
+                        
+                    case 9: // Impedansi R-L-C
+                        let r9 = parseFloat(document.getElementById('r9').value);
+                        let l9 = parseFloat(document.getElementById('l9').value);
+                        let c9 = parseFloat(document.getElementById('c9').value);
+                        let f9 = parseFloat(document.getElementById('f9').value);
+                        if (isNaN(r9) || isNaN(l9) || isNaN(c9) || isNaN(f9) || c9 === 0 || f9 === 0) throw new Error('Masukkan nilai yang valid (C dan f tidak boleh 0)');
+                        let xl9 = 2 * Math.PI * f9 * l9;
+                        let xc9 = 1 / (2 * Math.PI * f9 * c9);
+                        let z9 = Math.sqrt(r9 * r9 + (xl9 - xc9) * (xl9 - xc9));
+                        result = `
+                            <h3>🎛️ Hasil Perhitungan</h3>
+                            <p><strong>Impedansi rangkaian R-L-C:</strong></p>
+                            <p>X_L = 2πfL = 2π × ${f9} × ${l9} = <strong>${xl9.toFixed(2)} Ω</strong></p>
+                            <p>X_C = 1/(2πfC) = 1/(2π × ${f9} × ${c9}) = <strong>${xc9.toFixed(2)} Ω</strong></p>
+                            <p>X_L - X_C = ${xl9.toFixed(2)} - ${xc9.toFixed(2)} = <strong>${(xl9 - xc9).toFixed(2)} Ω</strong></p>
+                            <p>Z = √(R² + (X_L - X_C)²) = √(${r9}² + ${(xl9 - xc9).toFixed(2)}²) = <strong>${z9.toFixed(2)} Ω</strong></p>
+                            <p>Impedansi total rangkaian R-L-C adalah ${z9.toFixed(2)} Ω.</p>
+                        `;
+                        break;
+                }
+                
+                resultDiv.innerHTML = result;
+                resultDiv.style.display = 'block';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p style="color: #dc3545;">${error.message}</p>
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.style.background = 'linear-gradient(45deg, #f8d7da, #f5c6cb)';
+                resultDiv.style.borderLeft = '5px solid #dc3545';
+            }
+        }
+
+        // Add Enter key support for inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const calcId = this.closest('.calculator-form').id;
+                        const calcType = parseInt(calcId.replace('calc', ''));
+                        calculate(calcType);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>ah:</strong></p>
+                <p>1. Masukkan nilai arus (I) dalam satuan Ampere</p>
+                <p>2. Masukkan nilai hambatan (R) dalam satuan Ohm</p>
+                <p>3. Kalikan kedua nilai tersebut untuk mendapatkan tegangan</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc2">
+            <h2>🔌 Arus Melalui Resistor</h2>
+            <div class="form-group">
+                <label for="v2">Tegangan (V) dalam Volt:</label>
+                <input type="number" id="v2" step="any" placeholder="Masukkan nilai tegangan">
+            </div>
+            <div class="form-group">
+                <label for="r2">Hambatan (R) dalam Ohm:</label>
+                <input type="number" id="r2" step="any" placeholder="Masukkan nilai hambatan">
+            </div>
+            <button class="calculate-btn" onclick="calculate(2)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result2"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung arus yang mengalir melalui resistor, kita menggunakan <strong>Hukum Ohm</strong> dengan membagi tegangan dengan hambatan.</p>
+                <div class="formula">I = V / R</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• R = Hambatan (Ohm)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Masukkan nilai tegangan (V) dalam satuan Volt</p>
+                <p>2. Masukkan nilai hambatan (R) dalam satuan Ohm</p>
+                <p>3. Bagi tegangan dengan hambatan untuk mendapatkan arus</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc3">
+            <h2>🌊 Tegangan Melalui Induktor</h2>
+            <div class="form-group">
+                <label for="i3">Arus (I) dalam Ampere:</label>
+                <input type="number" id="i3" step="any" placeholder="Masukkan nilai arus">
+            </div>
+            <div class="form-group">
+                <label for="l3">Induktansi (L) dalam Henry:</label>
+                <input type="number" id="l3" step="any" placeholder="Masukkan nilai induktansi">
+            </div>
+            <div class="form-group">
+                <label for="f3">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f3" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(3)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result3"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung tegangan pada induktor, kita menggunakan konsep <strong>reaktansi induktif</strong> yang bergantung pada frekuensi dan induktansi.</p>
+                <div class="formula">V = I × X_L = I × 2πfL</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• X_L = Reaktansi induktif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• L = Induktansi (Henry)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi induktif: X_L = 2πfL</p>
+                <p>2. Kalikan arus dengan reaktansi induktif</p>
+                <p>3. Semakin tinggi frekuensi, semakin besar reaktansi induktif</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc4">
+            <h2>🔄 Arus Melalui Induktor</h2>
+            <div class="form-group">
+                <label for="v4">Tegangan (V) dalam Volt:</label>
+                <input type="number" id="v4" step="any" placeholder="Masukkan nilai tegangan">
+            </div>
+            <div class="form-group">
+                <label for="l4">Induktansi (L) dalam Henry:</label>
+                <input type="number" id="l4" step="any" placeholder="Masukkan nilai induktansi">
+            </div>
+            <div class="form-group">
+                <label for="f4">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f4" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(4)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result4"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung arus melalui induktor, kita membagi tegangan dengan reaktansi induktif.</p>
+                <div class="formula">I = V / X_L = V / (2πfL)</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• X_L = Reaktansi induktif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• L = Induktansi (Henry)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi induktif: X_L = 2πfL</p>
+                <p>2. Bagi tegangan dengan reaktansi induktif</p>
+                <p>3. Pada frekuensi tinggi, arus akan menurun karena reaktansi induktif meningkat</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc5">
+            <h2>⚡ Tegangan Melalui Kapasitor</h2>
+            <div class="form-group">
+                <label for="i5">Arus (I) dalam Ampere:</label>
+                <input type="number" id="i5" step="any" placeholder="Masukkan nilai arus">
+            </div>
+            <div class="form-group">
+                <label for="c5">Kapasitansi (C) dalam Farad:</label>
+                <input type="number" id="c5" step="any" placeholder="Masukkan nilai kapasitansi">
+            </div>
+            <div class="form-group">
+                <label for="f5">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f5" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(5)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result5"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung tegangan pada kapasitor, kita menggunakan konsep <strong>reaktansi kapasitif</strong> yang berbanding terbalik dengan frekuensi.</p>
+                <div class="formula">V = I × X_C = I / (2πfC)</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• X_C = Reaktansi kapasitif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• C = Kapasitansi (Farad)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi kapasitif: X_C = 1/(2πfC)</p>
+                <p>2. Kalikan arus dengan reaktansi kapasitif</p>
+                <p>3. Semakin tinggi frekuensi, semakin kecil reaktansi kapasitif</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc6">
+            <h2>🔋 Arus Melalui Kapasitor</h2>
+            <div class="form-group">
+                <label for="v6">Tegangan (V) dalam Volt:</label>
+                <input type="number" id="v6" step="any" placeholder="Masukkan nilai tegangan">
+            </div>
+            <div class="form-group">
+                <label for="c6">Kapasitansi (C) dalam Farad:</label>
+                <input type="number" id="c6" step="any" placeholder="Masukkan nilai kapasitansi">
+            </div>
+            <div class="form-group">
+                <label for="f6">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f6" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(6)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result6"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Untuk menghitung arus melalui kapasitor, kita menggunakan rumus yang melibatkan reaktansi kapasitif.</p>
+                <div class="formula">I = V / X_C = V × 2πfC</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• I = Arus (Ampere)</p>
+                <p>• V = Tegangan (Volt)</p>
+                <p>• X_C = Reaktansi kapasitif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• C = Kapasitansi (Farad)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi kapasitif: X_C = 1/(2πfC)</p>
+                <p>2. Bagi tegangan dengan reaktansi kapasitif</p>
+                <p>3. Pada frekuensi tinggi, arus akan meningkat karena reaktansi kapasitif menurun</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc7">
+            <h2>🔗 Impedansi Rangkaian R-L</h2>
+            <div class="form-group">
+                <label for="r7">Hambatan (R) dalam Ohm:</label>
+                <input type="number" id="r7" step="any" placeholder="Masukkan nilai hambatan">
+            </div>
+            <div class="form-group">
+                <label for="l7">Induktansi (L) dalam Henry:</label>
+                <input type="number" id="l7" step="any" placeholder="Masukkan nilai induktansi">
+            </div>
+            <div class="form-group">
+                <label for="f7">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f7" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(7)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result7"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Impedansi rangkaian R-L adalah gabungan hambatan resistif dan reaktansi induktif yang dihitung menggunakan <strong>teorema Pythagoras</strong>.</p>
+                <div class="formula">Z = √(R² + X_L²) = √(R² + (2πfL)²)</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• Z = Impedansi (Ohm)</p>
+                <p>• R = Hambatan (Ohm)</p>
+                <p>• X_L = Reaktansi induktif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• L = Induktansi (Henry)</p>
+                <p><strong>Langkah-langkah:</strong></p>
+                <p>1. Hitung reaktansi induktif: X_L = 2πfL</p>
+                <p>2. Kuadratkan nilai R dan X_L</p>
+                <p>3. Jumlahkan hasil kuadrat tersebut</p>
+                <p>4. Ambil akar kuadrat dari hasil penjumlahan</p>
+            </div>
+        </div>
+
+        <div class="calculator-form" id="calc8">
+            <h2>⚙️ Impedansi Rangkaian R-C</h2>
+            <div class="form-group">
+                <label for="r8">Hambatan (R) dalam Ohm:</label>
+                <input type="number" id="r8" step="any" placeholder="Masukkan nilai hambatan">
+            </div>
+            <div class="form-group">
+                <label for="c8">Kapasitansi (C) dalam Farad:</label>
+                <input type="number" id="c8" step="any" placeholder="Masukkan nilai kapasitansi">
+            </div>
+            <div class="form-group">
+                <label for="f8">Frekuensi (f) dalam Hz:</label>
+                <input type="number" id="f8" step="any" placeholder="Masukkan nilai frekuensi">
+            </div>
+            <button class="calculate-btn" onclick="calculate(8)">Hitung</button>
+            <button class="back-btn" onclick="showMainContent()">Kembali</button>
+            <div class="result" id="result8"></div>
+            <div class="explanation">
+                <h3>📚 Penjelasan Cara Menyelesaikan:</h3>
+                <p>Impedansi rangkaian R-C adalah gabungan hambatan resistif dan reaktansi kapasitif yang dihitung menggunakan <strong>teorema Pythagoras</strong>.</p>
+                <div class="formula">Z = √(R² + X_C²) = √(R² + (1/(2πfC))²)</div>
+                <p><strong>Dimana:</strong></p>
+                <p>• Z = Impedansi (Ohm)</p>
+                <p>• R = Hambatan (Ohm)</p>
+                <p>• X_C = Reaktansi kapasitif (Ohm)</p>
+                <p>• f = Frekuensi (Hz)</p>
+                <p>• C = Kapasitansi (Farad)</p>
+                <p><strong>Langkah-langk
